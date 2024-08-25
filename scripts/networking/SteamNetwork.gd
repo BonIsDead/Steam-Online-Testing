@@ -19,7 +19,7 @@ var lobbyMembersMax:int = 4
 ## The type of lobby to be created
 var lobbyType:Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
 
-## The current multiplayer peer
+# The current multiplayer peer
 var peer:SteamMultiplayerPeer
 
 
@@ -41,8 +41,9 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	Steam.lobby_created.connect(_lobbyCreated)
+	# Connect signals
 	log.connect(_log)
+	Steam.lobby_created.connect(_lobbyCreated)
 
 
 func _process(delta:float) -> void:
@@ -82,6 +83,7 @@ func lobbyListRequest() -> void:
 	Steam.requestLobbyList()
 
 
+## Sets lobby member information inside the lobby members array (id, name, avatar)
 func lobbyGetMembers(id:int) -> void:
 	lobbyMembers.clear()
 	
@@ -110,15 +112,13 @@ func lobbyGetMembers(id:int) -> void:
 func peerCreateHost() -> void:
 	log.emit("peerCreateHost")
 	
-	var _peer := SteamMultiplayerPeer.new()
-	var _error := _peer.create_host(0)
+	peer = SteamMultiplayerPeer.new()
+	var _error := peer.create_host(0)
 	
 	match _error:
 		OK:
 			log.emit("Status", "OK")
-			
-			# Assign the multiplayer peer
-			multiplayer.set_multiplayer_peer(_peer)
+			multiplayer.set_multiplayer_peer(peer)
 			_peerConnected(1)
 		
 		_:
@@ -134,6 +134,18 @@ func peerCreateClient(id:int) -> void:
 		Steam.lobby_joined.connect(_lobbyJoined)
 	
 	peer = SteamMultiplayerPeer.new()
+	var _error := peer.create_client(id)
+	
+	match _error:
+		OK:
+			log.emit("Status", "OK")
+			multiplayer.set_multiplayer_peer(peer)
+			_peerConnected(id) # NOTICE! This seems... incorrect
+		
+		_:
+			# An error has occured
+			push_error("Issue creating host: %s" % _error)
+	
 	Steam.joinLobby(id)
 
 
