@@ -1,0 +1,139 @@
+[gd_scene load_steps=6 format=3 uid="uid://d0xxh2hund65j"]
+
+[ext_resource type="Theme" uid="uid://dkp76sdv24wsq" path="res://Default.theme" id="1_wopg7"]
+[ext_resource type="Script" path="res://lobby/Lobbies.gd" id="2_njoi0"]
+[ext_resource type="Script" path="res://lobby/MainMenu.gd" id="2_r6dyu"]
+[ext_resource type="Script" path="res://lobby/Lobby.gd" id="4_m63tu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ow26k"]
+
+[node name="SteamLobby" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_wopg7")
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Steam Lobby Testing"
+horizontal_alignment = 2
+
+[node name="MenuTabs" type="TabContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ow26k")
+current_tab = 0
+tabs_visible = false
+
+[node name="MainMenu" type="VBoxContainer" parent="VBoxContainer/MenuTabs"]
+layout_mode = 2
+script = ExtResource("2_r6dyu")
+metadata/_tab_index = 0
+
+[node name="GameTitle" type="Label" parent="VBoxContainer/MenuTabs/MainMenu"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Gleeby Deeby 2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Footer" type="HBoxContainer" parent="VBoxContainer/MenuTabs/MainMenu"]
+layout_mode = 2
+size_flags_vertical = 10
+alignment = 1
+
+[node name="MainLobbyHost" type="Button" parent="VBoxContainer/MenuTabs/MainMenu/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Host Lobby"
+
+[node name="MainLobbyJoin" type="Button" parent="VBoxContainer/MenuTabs/MainMenu/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="Credits" type="Label" parent="VBoxContainer/MenuTabs/MainMenu"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "BonIsDead 2024 v0.0.1"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Lobbies" type="VBoxContainer" parent="VBoxContainer/MenuTabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("2_njoi0")
+metadata/_tab_index = 1
+
+[node name="Header" type="HBoxContainer" parent="VBoxContainer/MenuTabs/Lobbies"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/MenuTabs/Lobbies/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Lobbies Avaliable"
+vertical_alignment = 1
+
+[node name="LobbiesRefreshList" type="Button" parent="VBoxContainer/MenuTabs/Lobbies/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh List"
+
+[node name="LobbiesList" type="ItemList" parent="VBoxContainer/MenuTabs/Lobbies"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Footer" type="HBoxContainer" parent="VBoxContainer/MenuTabs/Lobbies"]
+layout_mode = 2
+alignment = 2
+
+[node name="LobbiesBackToMenu" type="Button" parent="VBoxContainer/MenuTabs/Lobbies/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to Menu"
+
+[node name="LobbiesJoinLobby" type="Button" parent="VBoxContainer/MenuTabs/Lobbies/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="Lobby" type="VBoxContainer" parent="VBoxContainer/MenuTabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("4_m63tu")
+metadata/_tab_index = 2
+
+[node name="LobbyTitle" type="Label" parent="VBoxContainer/MenuTabs/Lobby"]
+layout_mode = 2
+text = "Steam Name's Lobby"
+
+[node name="LobbyPlayerList" type="VBoxContainer" parent="VBoxContainer/MenuTabs/Lobby"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="VBoxContainer/MenuTabs/Lobby"]
+layout_mode = 2
+size_flags_vertical = 10
+alignment = 2
+
+[node name="LobbyLeaveLobby" type="Button" parent="VBoxContainer/MenuTabs/Lobby/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave Lobby"
+
+[node name="LobbyStartGame" type="Button" parent="VBoxContainer/MenuTabs/Lobby/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Game"

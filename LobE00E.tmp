@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3 uid="uid://iegdg5vi8rnr"]
+
+[ext_resource type="Script" path="res://Lobby.gd" id="1_h3sux"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6vnul"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g118e"]
+font_size = 24
+
+[node name="Lobby" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_h3sux")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6vnul")
+current_tab = 0
+tabs_visible = false
+
+[node name="Main" type="Control" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="MainContainer" type="VBoxContainer" parent="TabContainer/Main"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -93.0
+offset_right = 117.0
+grow_vertical = 0
+alignment = 2
+
+[node name="Title" type="Label" parent="TabContainer/Main/MainContainer"]
+layout_mode = 2
+text = "Fecal Company"
+label_settings = SubResource("LabelSettings_g118e")
+horizontal_alignment = 1
+
+[node name="MainLobbyCreate" type="Button" parent="TabContainer/Main/MainContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create Lobby"
+
+[node name="MainLobbyFind" type="Button" parent="TabContainer/Main/MainContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Find Lobby"
+
+[node name="LobbyList" type="VBoxContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Label" type="Label" parent="TabContainer/LobbyList"]
+layout_mode = 2
+text = "Lobby List"
+
+[node name="LobbyList" type="ItemList" parent="TabContainer/LobbyList"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/LobbyList"]
+layout_mode = 2
+alignment = 2
+
+[node name="LobbyListRefresh" type="Button" parent="TabContainer/LobbyList/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Refresh"
+
+[node name="LobbyListJoin" type="Button" parent="TabContainer/LobbyList/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+disabled = true
+text = "Join Lobby"
+
+[node name="Lobby" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="LobyContainer" type="VBoxContainer" parent="TabContainer/Lobby"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LobbyName" type="Label" parent="TabContainer/Lobby/LobyContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "User's Lobby"

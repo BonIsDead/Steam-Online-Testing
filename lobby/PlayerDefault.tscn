@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://b618yuo6no23p"]
+
+[ext_resource type="Texture2D" uid="uid://bolwq4tsrrerh" path="res://lobby/AvatarDefault.png" id="1_18881"]
+
+[node name="PlayerDefault" type="HBoxContainer"]
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("1_18881")
+expand_mode = 1
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+text = "Steam User"
