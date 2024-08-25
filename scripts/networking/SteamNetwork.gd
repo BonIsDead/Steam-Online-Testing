@@ -6,14 +6,14 @@ signal log(who:String, what:String)
 const STEAM_APP_ID:int = 480
 
 ## The Steam ID for the current player
-var steamId:int = Steam.getSteamID()
+var steamId:int
 ## The Steam name for the current player
-var steamName:String = Steam.getPersonaName()
+var steamName:String
 
 ## The current lobby ID
-var lobbyId:int = -1
+var lobbyId:int
 ## The members in the current lobby
-var lobbyMembers:Array = []
+var lobbyMembers:Array
 ## The maximum amount of members in a lobby
 var lobbyMembersMax:int = 4
 ## The type of lobby to be created
@@ -24,9 +24,20 @@ var peer:SteamMultiplayerPeer
 
 
 func _init() -> void:
-	# Initialize Steam
-	var _response := Steam.steamInitEx(true, STEAM_APP_ID)
+	# Initializing Steam
+	var _response := Steam.steamInitEx(false, STEAM_APP_ID)
 	print(_response)
+	
+	# Check initialization status
+	match _response.status:
+		Steam.STEAM_API_INIT_RESULT_OK:
+			print("Steam initialized successfully.")
+			
+			steamId = Steam.getSteamID()
+			steamName = Steam.getPersonaName()
+		
+		Steam.STEAM_API_INIT_RESULT_FAILED_GENERIC, Steam.STEAM_API_INIT_RESULT_NO_STEAM_CLIENT, Steam.STEAM_API_INIT_RESULT_VERSION_MISMATCH:
+			push_error("Failed to initialize Steam: %s" % _response)
 
 
 func _ready() -> void:
@@ -40,7 +51,7 @@ func _process(delta:float) -> void:
 
 ## Create a new lobby
 func lobbyCreate() -> void:
-	log.emit("Method", "lobbyCreate")
+	log.emit("lobbyCreate")
 	
 	# Connect signals
 	if not multiplayer.peer_connected.is_connected(_peerConnected):
@@ -56,7 +67,7 @@ func lobbyCreate() -> void:
 
 ## Join a created lobby
 func lobbyJoin(id:int) -> void:
-	log.emit("Method", "lobbyJoin")
+	log.emit("lobbyJoin")
 	
 	if not Steam.lobby_joined.is_connected(_lobbyJoined):
 		Steam.lobby_joined.connect(_lobbyJoined)
@@ -97,14 +108,14 @@ func lobbyGetMembers(id:int) -> void:
 
 ## Creates a host peer
 func peerCreateHost() -> void:
-	log.emit("Method", "peerCreateHost")
+	log.emit("peerCreateHost")
 	
 	var _peer := SteamMultiplayerPeer.new()
 	var _error := _peer.create_host(0)
 	
 	match _error:
 		OK:
-			log.emit("peerCreateHost", "OK")
+			log.emit("Status", "OK")
 			
 			# Assign the multiplayer peer
 			multiplayer.set_multiplayer_peer(_peer)
@@ -112,12 +123,12 @@ func peerCreateHost() -> void:
 		
 		_:
 			# An error has occured
-			printerr("Issue creating host: %s" % _error)
+			push_error("Issue creating host: %s" % _error)
 
 
 ## Creates a client peer
 func peerCreateClient(id:int) -> void:
-	log.emit("Method", "peerCreateClient")
+	log.emit("peerCreateClient")
 	
 	if not Steam.lobby_joined.is_connected(_lobbyJoined):
 		Steam.lobby_joined.connect(_lobbyJoined)
@@ -135,13 +146,13 @@ func gameStart() -> void:
 
 ## Signal function for a lobby being created
 func _lobbyCreated(connect:int, id:int) -> void:
-	log.emit("Signal", "Steam.lobby_created")
+	log.emit("Signal", "_lobbyCreated")
 	
 	if (not connect == 1):
 		return
 	
 	lobbyId = id
-	print("Created Lobby: %s" % id)
+	log.emit("Lobby ID", str(id) )
 	
 	Steam.setLobbyJoinable(id, true)
 	
@@ -153,14 +164,13 @@ func _lobbyCreated(connect:int, id:int) -> void:
 
 ## Signal function for a lobby being joined
 func _lobbyJoined(id:int, _permissions:int, _locked:bool, response:int) -> void:
-	log.emit("Signal", "Steam.lobby_joined")
+	log.emit("Signal", "_lobbyJoined")
 	
 	# if joining the lobby was successful
 	if (response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS):
 		var _steamId := Steam.getLobbyOwner(id)
 		if (_steamId != Steam.getSteamID() ):
 			lobbyId = id
-			#socketConnect(_steamId)
 			peerCreateClient(id)
 		return
 	
@@ -190,16 +200,14 @@ func _lobbyJoined(id:int, _permissions:int, _locked:bool, response:int) -> void:
 
 ## Signal function for when a peer has connected
 func _peerConnected(id:int) -> void:
-	log.emit("Signal", "multiplayer.peer_connected")
-	pass
+	log.emit("Signal", "_peerConnected")
 
 
 ## Signal function for when a peer has disconnected
 func _peerDisconnected(id:int) -> void:
-	log.emit("Signal", "multiplayer.peer_disconnected")
-	pass
+	log.emit("Signal", "_peerDisconnected")
 
 
 ## Signal function for debug logging
-func _log(who:String, what:String) -> void:
-	print_rich("[color=orange]%s[/color]: %s" % [who, what] )
+func _log(who:String, what:String = "") -> void:
+	print_rich("[color=orange]%s[/color]\t%s" % [who, what] )

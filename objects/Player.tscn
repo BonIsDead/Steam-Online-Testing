@@ -7,10 +7,6 @@
 [ext_resource type="Script" path="res://scripts/helpers/RotationCopySmooth.gd" id="3_pifkh"]
 [ext_resource type="Texture2D" uid="uid://c478cayuaeiqy" path="res://assets/Overlay.png" id="4_ee3ao"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nkvi7"]
-radius = 0.3
-height = 1.4
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cpjvs"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -18,9 +14,19 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
+properties/2/path = NodePath("Hand:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nkvi7"]
+radius = 0.3
+height = 1.4
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_onl4m")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_cpjvs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
@@ -30,16 +36,13 @@ shape = SubResource("CapsuleShape3D_nkvi7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 script = ExtResource("1_hilbw")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_cpjvs")
-
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Hand" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 script = ExtResource("3_pifkh")
 targetPath = NodePath("../FirstPersonCamera")
 speed = 12.0
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Node3D"]
+[node name="SpotLight3D" type="SpotLight3D" parent="Hand"]
 light_energy = 2.0
 light_projector = ExtResource("3_5h0xa")
 shadow_enabled = true
@@ -55,7 +58,7 @@ alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("3_552ha")
 
-[node name="Control" type="Control" parent="."]
+[node name="Statusbar" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,7 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
+[node name="TextureRect" type="TextureRect" parent="Statusbar"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
