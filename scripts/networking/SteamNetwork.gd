@@ -112,12 +112,16 @@ func lobbyGetMembers(id:int) -> void:
 func peerCreateHost() -> void:
 	log.emit("peerCreateHost")
 	
+	# Connect signals
+	if not Steam.lobby_joined.is_connected(_lobbyJoined):
+		Steam.lobby_joined.connect(_lobbyJoined)
+	
+	# Create new multiplayer peer
 	peer = SteamMultiplayerPeer.new()
 	var _error := peer.create_host(0)
 	
 	match _error:
 		OK:
-			log.emit("Status", "OK")
 			multiplayer.set_multiplayer_peer(peer)
 			_peerConnected(1)
 		
@@ -130,23 +134,22 @@ func peerCreateHost() -> void:
 func peerCreateClient(id:int) -> void:
 	log.emit("peerCreateClient")
 	
+	# Connect signals
 	if not Steam.lobby_joined.is_connected(_lobbyJoined):
 		Steam.lobby_joined.connect(_lobbyJoined)
 	
+	# Create new multiplayer peer
 	peer = SteamMultiplayerPeer.new()
 	var _error := peer.create_client(id)
 	
 	match _error:
 		OK:
-			log.emit("Status", "OK")
 			multiplayer.set_multiplayer_peer(peer)
 			_peerConnected(id) # NOTICE! This seems... incorrect
 		
 		_:
 			# An error has occured
 			push_error("Issue creating host: %s" % _error)
-	
-	Steam.joinLobby(id)
 
 
 ## Temporarily creates a game
@@ -154,6 +157,11 @@ func peerCreateClient(id:int) -> void:
 func gameStart() -> void:
 	get_tree().change_scene_to_file("res://scenes/TestScene.tscn")
 	print("Members: %s" % lobbyMembers)
+
+
+## TODO! Called to end the game and reset everything
+func gameDisconnect() -> void:
+	pass
 
 
 ## Signal function for a lobby being created

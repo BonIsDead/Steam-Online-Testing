@@ -1,0 +1,117 @@
+[gd_scene load_steps=8 format=4 uid="uid://daq6aptudkf1c"]
+
+[ext_resource type="Material" uid="uid://dw4crt5n7m7q3" path="res://assets/models/CornStalks.material" id="1_gu5ec"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7w3q6"]
+_surfaces = [{
+"aabb": AABB(-1, 0, -1, 2, 2.4, 2),
+"format": 34896613377,
+"index_count": 48,
+"index_data": PackedByteArray("AAADAAEAAAACAAMABAAHAAUABAAGAAcACAALAAkACAAKAAsADAAPAA0ADAAOAA8AEAATABIAEAARABMAFAAXABYAFAAVABcAGAAbABoAGAAZABsAHAAfAB4AHAAdAB8A"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 32,
+"vertex_data": PackedByteArray("AAAAAMzMAAD//wAAzMwAAAAAVNXMzAAA//9U1czMAAAyMwAAAAAAADMzAAD//wAAMjNU1QAAAAAzM1TV//8AAP7/AAAyMwAAAAAAADMzAAD+/1TVMjMAAAAAVNUzMwAAzMwAAP7/AADLzAAAAAAAAMzMVNX+/wAAy8xU1QAAAABl5gAAMrMAAJkZAAAyswAAZeb//zKzAACZGf//MrMAAMxMAABl5gAAzEwAAJkZAADMTP//ZeYAAMxM//+ZGQAAmRkAAMxMAABl5gAAzEwAAJkZ///MTAAAZeb//8xMAAAyswAAmRkAADKzAABl5gAAMrP//5kZAAAys///ZeYAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_a0bb2"]
+resource_name = "CornStalks_CornStalks_Single"
+_surfaces = [{
+"aabb": AABB(-1, 0, -1, 2, 2.4, 2),
+"attribute_data": PackedByteArray("AAD///////8AAAAA//8AAAAA////////AAAAAP//AAAAAP///////wAAAAD//wAAAAD///////8AAAAA//8AAAAA////////AAAAAP//AAAAAP///////wAAAAD//wAAAAD///////8AAAAA//8AAAAA////////AAAAAP//AAA="),
+"format": 34896613399,
+"index_count": 48,
+"index_data": PackedByteArray("AAADAAEAAAACAAMABAAHAAUABAAGAAcACAALAAkACAAKAAsADAAPAA0ADAAOAA8AEAATABIAEAARABMAFAAXABYAFAAVABcAGAAbABoAGAAZABsAHAAfAB4AHAAdAB8A"),
+"material": ExtResource("1_gu5ec"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 32,
+"vertex_data": PackedByteArray("AAAAAMzMAID//wAAzMwAgAAAVNXMzACA//9U1czMAIAyMwAAAAD/vzMzAAD///+/MjNU1QAA/78zM1TV////v/7/AAAyM///AAAAADMz///+/1TVMjP//wAAVNUzM///zMwAAP7//7/LzAAAAAD/v8zMVNX+//+/y8xU1QAA/79l5gAAMrMAAJkZAAAyswAAZeb//zKzAACZGf//MrMAAMxMAABl5gAAzEwAAJkZAADMTP//ZeYAAMxM//+ZGQAAmRkAAMxMAABl5gAAzEwAAJkZ///MTAAAZeb//8xMAAAyswAAmRkAADKzAABl5gAAMrP//5kZAAAys///ZeYAAP9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/AAD/fwAA/38AAP9/AAD/f/9//3//f/9//3//f/9//z//f/8//3//P/9//z//f////3////9/////f////3//v/9//7//f/+//3//v/9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_7w3q6")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3j5st"]
+_surfaces = [{
+"aabb": AABB(-1, 0, -1, 2.1, 2.4, 2.1),
+"format": 34896613377,
+"index_count": 24,
+"index_data": PackedByteArray("AAADAAEAAAACAAMABAAHAAUABAAGAAcADQAJAAsADQAIAAkACgAPAAwACgAOAA8A"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("VBAAAP//AAB54wAAF4YAAFQQVNX//wAAeeNU1ReGAAAXhgAAeeMAAP//AABUEAAAF4ZU1XnjAAD//1TVVBAAAAAAAACqqgAAAAD//6qqAACpqgAAAAAAALZt//+qqgAAqar//wAAAAC2bQAAqqoAAKmqAAC2bQAAqar//7ZtAAA=")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ekbyh"]
+resource_name = "CornStalks_CornStalks_Corner"
+_surfaces = [{
+"aabb": AABB(-1, 0, -1, 2.1, 2.4, 2.1),
+"attribute_data": PackedByteArray("AAD///////8AAAAA//8AAAAA////////AAAAAP//AAD/f////38AAP9///8AAAAA/38AAAAA//////////8AAA=="),
+"format": 34896613399,
+"index_count": 24,
+"index_data": PackedByteArray("AAADAAEAAAACAAMABAAHAAUABAAGAAcADQAJAAsADQAIAAkACgAPAAwACgAOAA8A"),
+"material": ExtResource("1_gu5ec"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("VBAAAP//VJV54wAAF4ZUlVQQVNX//1SVeeNU1ReGVJUXhgAAeeOpqv//AABUEKmqF4ZU1Xnjqar//1TVVBCpqgAAAACqqgAAAAD//6qqAACpqgAAAAAAALZt//+qqgAAqar//wAAAAC2bQAAqqoAAKmqAAC2bQAAqar//7ZtAAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9//3//f/9//7//f/9//3//v/9//3//f/+//3//v/9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_3j5st")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ayxcv"]
+_surfaces = [{
+"aabb": AABB(-0.1, 0, -1, 1, 2.4, 2),
+"format": 34896613377,
+"index_count": 24,
+"index_data": PackedByteArray("AAADAAEAAAACAAMACAAHAAkACAAFAAcABAAJAAYABAAIAAkACgANAAsACgAMAA0A"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 14,
+"vertex_data": PackedByteArray("//8AANjuAAAAAAAAJhEAAP//VNXY7gAAAABU1SYRAAD/fwAAAAAAAP9/AAD//wAA/3///wAAAAD/f/////8AAP9/AAD/fwAA/3////9/AAAAAAAA2O4AAP7/AAAmEQAAAABU1djuAAD+/1TVJhEAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_6pihr"]
+resource_name = "CornStalks_CornStalks_Side"
+_surfaces = [{
+"aabb": AABB(-0.1, 0, -1, 1, 2.4, 2),
+"attribute_data": PackedByteArray("AAD///////8AAAAA//8AAP9/////f////38AAP9/AAAAAP///////wAAAAD//wAAAAD///////8AAAAA//8AAA=="),
+"format": 34896613399,
+"index_count": 24,
+"index_data": PackedByteArray("AAADAAEAAAACAAMACAAHAAoACAAFAAcABAALAAYABAAJAAsADAAPAA0ADAAOAA8A"),
+"material": ExtResource("1_gu5ec"),
+"name": "CornStalks",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("//8AANjuVNUAAAAAJhFU1f//VNXY7lTVAABU1SYRVNX/fwAAAAAAAP9/AAD//wAA/3///wAAAAD/f/////8AAP9/AAD/fwAA/38AAP9/AAD/f////38AAP9/////fwAAAAAAANjuqar+/wAAJhGpqgAAVNXY7qmq/v9U1SYRqar/fwAA/38AAP9/AAD/fwAA/7//f/+//3//v/9//7//f/+//3//v/9//7//f/+//3//fwAA/38AAP9/AAD/fwAA")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_ayxcv")
+
+[node name="GridMapTiles" type="Node3D"]
+
+[node name="CornStalks" type="Node3D" parent="."]
+
+[node name="Single" type="MeshInstance3D" parent="CornStalks"]
+mesh = SubResource("ArrayMesh_a0bb2")
+skeleton = NodePath("")
+
+[node name="Corner" type="MeshInstance3D" parent="CornStalks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+mesh = SubResource("ArrayMesh_ekbyh")
+skeleton = NodePath("")
+
+[node name="Side" type="MeshInstance3D" parent="CornStalks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+mesh = SubResource("ArrayMesh_6pihr")
+skeleton = NodePath("")

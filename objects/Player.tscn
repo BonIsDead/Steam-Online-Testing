@@ -43,7 +43,6 @@ targetPath = NodePath("../FirstPersonCamera")
 speed = 12.0
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Hand"]
-light_energy = 2.0
 light_projector = ExtResource("3_5h0xa")
 shadow_enabled = true
 shadow_opacity = 0.0
