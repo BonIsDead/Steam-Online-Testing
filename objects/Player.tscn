@@ -1,43 +1,67 @@
-[gd_scene load_steps=9 format=3 uid="uid://c77s4771lbjbo"]
+[gd_scene load_steps=12 format=3 uid="uid://c77s4771lbjbo"]
 
 [ext_resource type="Script" path="res://scripts/helpers/FirstPersonCamera.gd" id="1_hilbw"]
 [ext_resource type="Script" path="res://objects/Player.gd" id="1_onl4m"]
 [ext_resource type="Texture2D" uid="uid://c8gkm7n7hupks" path="res://assets/FlashlightCookie.png" id="3_5h0xa"]
-[ext_resource type="Texture2D" uid="uid://cjsviwoebdrgb" path="res://assets/Zeke.png" id="3_552ha"]
 [ext_resource type="Script" path="res://scripts/helpers/RotationCopySmooth.gd" id="3_pifkh"]
-[ext_resource type="Texture2D" uid="uid://c478cayuaeiqy" path="res://assets/Overlay.png" id="4_ee3ao"]
+[ext_resource type="PackedScene" uid="uid://ctnoan3ipk0gt" path="res://StatusBar.tscn" id="5_5hyoc"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cpjvs"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath(".:rotation")
+properties/1/path = NodePath("Hand:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath("Hand:rotation")
+properties/2/path = NodePath("FirstPersonCamera:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nkvi7"]
-radius = 0.3
-height = 1.4
+[sub_resource type="SphereShape3D" id="SphereShape3D_b02gx"]
+radius = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_1q4ta"]
+radial_segments = 32
+rings = 16
+
+[sub_resource type="BoxMesh" id="BoxMesh_ww3eb"]
+size = Vector3(0.5, 0.2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ho7pq"]
+shading_mode = 0
+albedo_color = Color(1, 0.564706, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rq77w"]
+material = SubResource("StandardMaterial3D_ho7pq")
+radial_segments = 8
+rings = 4
 
 [node name="Player" type="CharacterBody3D"]
+motion_mode = 1
+wall_min_slide_angle = 0.0
+platform_on_leave = 2
 script = ExtResource("1_onl4m")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cpjvs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-shape = SubResource("CapsuleShape3D_nkvi7")
+shape = SubResource("SphereShape3D_b02gx")
 
 [node name="FirstPersonCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+cull_mask = 1
 script = ExtResource("1_hilbw")
 
+[node name="TemporaryMesh" type="MeshInstance3D" parent="FirstPersonCamera"]
+unique_name_in_owner = true
+mesh = SubResource("SphereMesh_1q4ta")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FirstPersonCamera/TemporaryMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+mesh = SubResource("BoxMesh_ww3eb")
+
 [node name="Hand" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 script = ExtResource("3_pifkh")
 targetPath = NodePath("../FirstPersonCamera")
 speed = 12.0
@@ -45,32 +69,10 @@ speed = 12.0
 [node name="SpotLight3D" type="SpotLight3D" parent="Hand"]
 light_projector = ExtResource("3_5h0xa")
 shadow_enabled = true
-shadow_opacity = 0.0
 spot_range = 16.0
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-offset = Vector2(0, 24)
-pixel_size = 0.04
-billboard = 2
-shaded = true
-alpha_cut = 1
-texture_filter = 0
-texture = ExtResource("3_552ha")
+[node name="StatusBar" parent="." instance=ExtResource("5_5hyoc")]
 
-[node name="Statusbar" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="TextureRect" type="TextureRect" parent="Statusbar"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_ee3ao")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 2
+mesh = SubResource("SphereMesh_rq77w")

@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://drrb838p6jhdt"
-path="res://.godot/imported/ENoodleScript.ttf-19df94972a4106197c4071fb7f0fd0bc.fontdata"
+path="res://.godot/imported/ENoodleScript.ttf-a371c475a31d4242b9b44ab327a102d7.fontdata"
 
 [deps]
 
-source_file="res://ENoodleScript.ttf"
-dest_files=["res://.godot/imported/ENoodleScript.ttf-19df94972a4106197c4071fb7f0fd0bc.fontdata"]
+source_file="res://assets/ENoodleScript.ttf"
+dest_files=["res://.godot/imported/ENoodleScript.ttf-a371c475a31d4242b9b44ab327a102d7.fontdata"]
 
 [params]
 

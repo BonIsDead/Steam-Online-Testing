@@ -47,7 +47,9 @@ const WEIGHT_MAX:float = 100
 ## How much the item weighs
 @export_range(0.0, WEIGHT_MAX, 0.1) var weight:int
 
+## if the item is currently active
 var isActive:bool
+## If the item is being used
 var isBeingUsed:bool
 
 

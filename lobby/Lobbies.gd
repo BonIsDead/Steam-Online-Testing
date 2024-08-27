@@ -1,5 +1,6 @@
 extends VBoxContainer
 
+## Stored array of found lobbies
 var lobbiesAvaliable:Array
 
 @onready var lobbyList:ItemList = %LobbiesList
@@ -35,7 +36,7 @@ func _ready() -> void:
 		%MenuTabs.set_current_tab(2)
 	)
 	
-	Steam.lobby_match_list.connect(_lobbyMatchList)
+	Steam.lobby_match_list.connect(_onLobbyMatchList)
 
 
 func _process(delta:float) -> void:
@@ -43,16 +44,20 @@ func _process(delta:float) -> void:
 	buttonJoinLobby.set_disabled(not lobbyList.is_anything_selected() )
 
 
-func _lobbyMatchList(lobbies:Array) -> void:
-	lobbiesAvaliable.clear()
-	lobbiesAvaliable = lobbies
-	
+## Called by "Steam.lobby_match_list"
+func _onLobbyMatchList(lobbies:Array) -> void:
 	for lobby in lobbies:
+		# Get the lobby information
 		var _name:String = Steam.getLobbyData(lobby, "name")
 		var _members:String = str(Steam.getNumLobbyMembers(lobby) )
 		var _memberLimit:String = str(Steam.getLobbyMemberLimit(lobby) )
 		
+		# Keep empty names from appearing blank
 		if (_name == ""):
 			_name = "???"
 		
+		# Add it to the lobby list
 		lobbyList.add_item(_name + " : " + _members + "/" + _memberLimit)
+	
+	# Update the avaliable lobbies
+	lobbiesAvaliable = lobbies

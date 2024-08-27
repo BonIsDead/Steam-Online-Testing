@@ -1,5 +1,6 @@
 extends Node
 
+signal playerSet
 ## Emitted when the player has died
 signal playerDied
 ## Emitted when the active item has changed
@@ -15,6 +16,11 @@ const HEALTH_MAX:int = 100
 const STAMINA_MAX:int = 100
 ## Maximum amount of items that can be held
 const ITEM_MAX:int = 4
+
+var playerLocal:Player:
+	set(value):
+		playerLocal = value
+		playerSet.emit()
 
 ## The current health
 var health:int = HEALTH_MAX:

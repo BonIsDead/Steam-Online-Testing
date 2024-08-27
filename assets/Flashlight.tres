@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Item" load_steps=4 format=3 uid="uid://dx7yc3wrf11w7"]
 
 [ext_resource type="Texture2D" uid="uid://btxffjny6tku0" path="res://assets/textures/items/FlashlightActive.png" id="1_l6d7w"]
-[ext_resource type="Script" path="res://Item.gd" id="1_oa4xy"]
+[ext_resource type="Script" path="res://scripts/resources/Item.gd" id="1_oa4xy"]
 [ext_resource type="Texture2D" uid="uid://yllimt0uswht" path="res://assets/textures/items/FlashlightInactive.png" id="2_rxdla"]
 
 [resource]

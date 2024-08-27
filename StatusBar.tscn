@@ -1,0 +1,181 @@
+[gd_scene load_steps=17 format=3 uid="uid://ctnoan3ipk0gt"]
+
+[ext_resource type="Texture2D" uid="uid://c478cayuaeiqy" path="res://assets/Overlay.png" id="1_s6kc0"]
+[ext_resource type="Script" path="res://StatusBar.gd" id="1_vm6t3"]
+[ext_resource type="FontFile" uid="uid://b1nbjhjyx86f2" path="res://assets/Digital7.ttf" id="2_jrjqs"]
+[ext_resource type="Texture2D" uid="uid://cli1qnnesjyom" path="res://assets/MinimapMask.png" id="2_v6hlo"]
+[ext_resource type="Script" path="res://MinimapCamera.gd" id="3_66lf0"]
+[ext_resource type="Shader" path="res://StatusBar.gdshader" id="3_r6d2r"]
+[ext_resource type="Texture2D" uid="uid://bppflet76ps3r" path="res://assets/ItemActive.png" id="7_cr2ga"]
+[ext_resource type="Script" path="res://mesh_instance_3d.gd" id="8_crfki"]
+[ext_resource type="Texture2D" uid="uid://3oe81h0slve3" path="res://assets/OrientationMask.png" id="8_hbkhj"]
+[ext_resource type="Shader" path="res://assets/materials/Wireframe.gdshader" id="9_o81bo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t5n42"]
+shader = ExtResource("3_r6d2r")
+
+[sub_resource type="LabelSettings" id="LabelSettings_f4ee5"]
+font = ExtResource("2_jrjqs")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8isj5"]
+render_priority = 0
+shader = ExtResource("9_o81bo")
+shader_parameter/color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ltix1"]
+size = Vector3(0.025, 0.6, 0.025)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b0gtj"]
+render_priority = 0
+shader = ExtResource("9_o81bo")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_syeqj"]
+render_priority = 0
+shader = ExtResource("9_o81bo")
+shader_parameter/color = Color(0, 0, 1, 1)
+
+[node name="StatusBar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_vm6t3")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_s6kc0")
+
+[node name="Minimap" type="TextureRect" parent="."]
+clip_children = 1
+layout_mode = 0
+offset_left = 384.0
+offset_top = 16.0
+offset_right = 464.0
+offset_bottom = 96.0
+texture = ExtResource("2_v6hlo")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Minimap"]
+material = SubResource("ShaderMaterial_t5n42")
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+
+[node name="SubViewport" type="SubViewport" parent="Minimap/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+debug_draw = 4
+size = Vector2i(80, 80)
+render_target_update_mode = 4
+
+[node name="Node3D" type="Node3D" parent="Minimap/SubViewportContainer/SubViewport"]
+script = ExtResource("3_66lf0")
+
+[node name="Camera3D" type="Camera3D" parent="Minimap/SubViewportContainer/SubViewport/Node3D"]
+cull_mask = 2
+projection = 1
+size = 32.0
+near = 0.01
+
+[node name="HealthDisplay" type="Label" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 49.0
+offset_top = 17.0
+offset_right = 82.0
+offset_bottom = 33.0
+label_settings = SubResource("LabelSettings_f4ee5")
+horizontal_alignment = 2
+clip_text = true
+
+[node name="OxygenDisplay" type="Label" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 45.0
+offset_top = 33.0
+offset_right = 78.0
+offset_bottom = 49.0
+label_settings = SubResource("LabelSettings_f4ee5")
+horizontal_alignment = 2
+clip_text = true
+
+[node name="ItemActive" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 176.0
+offset_top = 224.0
+offset_right = 208.0
+offset_bottom = 256.0
+texture = ExtResource("7_cr2ga")
+
+[node name="Orientation" type="TextureRect" parent="."]
+clip_children = 1
+layout_mode = 2
+offset_left = 352.0
+offset_top = 16.0
+offset_right = 384.0
+offset_bottom = 48.0
+texture = ExtResource("8_hbkhj")
+expand_mode = 1
+stretch_mode = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Orientation"]
+material = SubResource("ShaderMaterial_t5n42")
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[node name="SubViewport" type="SubViewport" parent="Orientation/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+canvas_cull_mask = 4294966276
+size = Vector2i(32, 32)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="Orientation/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+cull_mask = 4
+projection = 1
+
+[node name="Node3D" type="Node3D" parent="Orientation/SubViewportContainer/SubViewport"]
+script = ExtResource("8_crfki")
+
+[node name="X" type="MeshInstance3D" parent="Orientation/SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.3, 0, 0)
+layers = 4
+material_override = SubResource("ShaderMaterial_8isj5")
+mesh = SubResource("BoxMesh_ltix1")
+skeleton = NodePath("../..")
+
+[node name="Y" type="MeshInstance3D" parent="Orientation/SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+layers = 4
+material_override = SubResource("ShaderMaterial_b0gtj")
+mesh = SubResource("BoxMesh_ltix1")
+skeleton = NodePath("../..")
+
+[node name="Z" type="MeshInstance3D" parent="Orientation/SubViewportContainer/SubViewport/Node3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.3)
+layers = 4
+material_override = SubResource("ShaderMaterial_syeqj")
+mesh = SubResource("BoxMesh_ltix1")
+skeleton = NodePath("../..")
+
+[node name="PlayerAvatar" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 224.0
+offset_right = 48.0
+offset_bottom = 256.0
+stretch_mode = 2

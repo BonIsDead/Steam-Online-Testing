@@ -4,14 +4,19 @@ extends VBoxContainer
 @onready var playerList:VBoxContainer = $LobbyPlayerList
 @onready var buttonLeaveLobby:Button = %LobbyLeaveLobby
 @onready var buttonStartGame:Button = %LobbyStartGame
-
 @onready var playerDefault:PackedScene = preload("res://lobby/PlayerDefault.tscn")
 
 
 func _ready() -> void:
-	Steam.lobby_joined.connect(_lobbyJoined)
-	Steam.lobby_chat_update.connect(_lobbyChatUpdate)
-	#Steam.relay_network_status.connect(_relayNetworkStatus)
+	# Connect Steam signals
+	Steam.lobby_joined.connect(_onLobbyJoined)
+	Steam.lobby_chat_update.connect(_onLobbyChatUpdate)
+	SteamNetwork.playerListChanged.connect(_onLobbyChatUpdate)
+	#Steam.relay_network_status.connect(_onRelayNetworkStatus)
+	
+	# Connect signals for adding and removing members from the lobby
+	multiplayer.peer_connected.connect(_onPeerConnected)
+	multiplayer.peer_disconnected.connect(_onPeerDisconnected)
 	
 	buttonLeaveLobby.pressed.connect(func():
 		if (SteamNetwork.lobbyId != 0):
@@ -24,33 +29,78 @@ func _ready() -> void:
 		%MenuTabs.set_current_tab(0)
 	)
 	
-	buttonStartGame.pressed.connect(_gameStart)
+	buttonStartGame.pressed.connect(_onGameStart)
 
 
-func _gameStart() -> void:
-	SteamNetwork.gameStart.rpc()
+## Adds a member display to the player list
+func lobbyListMemberAdd(steamId:int) -> void:
+	# Check if the steam ID is in the lobby members information
+	if (not steamId in SteamNetwork.lobbyMembersInfo):
+		return
+	
+	# Get the member information
+	var _member:Dictionary = SteamNetwork.lobbyMembersInfo[steamId]
+	
+	# Instance an icon and name for each member in the lobby
+	var _display := playerDefault.instantiate()
+	_display.get_node("Name").set_text(_member.name)
+	_display.get_node("Icon").set_texture(_member.avatar)
+	_display.set_name(_member.name)
+	playerList.add_child(_display)
 
 
-func _lobbyJoined(id:int, _permissions:int, _locked:bool, response:int) -> void:
-	var _ownerName:String = Steam.getFriendPersonaName(Steam.getLobbyOwner(id) )
+## Removes a member display from the player list
+func lobbyListMemberRemove(steamId:int) -> void:
+	# Check if the steam ID is in the lobby members information
+	if (not steamId in SteamNetwork.lobbyMembersInfo):
+		return
+	
+	# Get the member information
+	var _member:Dictionary = SteamNetwork.lobbyMembersInfo[steamId]
+	
+	# Remove the player display from the list
+	if playerList.has_node(_member.name):
+		playerList.get_node(_member.name).queue_free()
+
+
+## Called by "buttonStartGame.pressed"
+func _onGameStart() -> void:
+	GameManager.gameStart.rpc()
+
+
+## Called by "Steam.lobby_joined"
+func _onLobbyJoined(lobbyId:int, _permissions:int, _locked:bool, response:int) -> void:
+	# Update the lobbies name
+	var _ownerName:String = Steam.getFriendPersonaName(Steam.getLobbyOwner(lobbyId) )
 	title.set_text(_ownerName + "'s Lobby")
 	
-	await SteamNetwork.lobbyGetMembers(id)
+	# Wait for the lobbies member information
+	await SteamNetwork.lobbyGetMemberInfo(lobbyId)
 	
-	for _member in SteamNetwork.lobbyMembers:
-		var _player := playerDefault.instantiate()
-		_player.get_node("Name").set_text(_member.name)
-		_player.get_node("Icon").set_texture(_member.icon)
-		playerList.add_child(_player)
-		
-		#SteamNetwork.playerRegister.rpc(id)
+	# Add members to the player list
+	for _steamId in SteamNetwork.lobbyMembersInfo:
+		lobbyListMemberAdd(_steamId)
 
 
-func _lobbyChatUpdate(id:int, changedId:int, makingChangeId:int, chatState:int) -> void:
-	print(id, " ", changedId, " ", makingChangeId, " ", chatState)
+# Not quite sure what this one does yet
+func _onLobbyChatUpdate(lobbyId:int, changedId:int, makingChangeId:int, chatState:int) -> void:
+	print(lobbyId, " ", changedId, " ", makingChangeId, " ", chatState)
 
 
-func _relayNetworkStatus(avaliable:int, pingMeasurement:int, _avaliableConfig:int, _avaliableRelay:int, debugMessage:String) -> void:
-	print(avaliable)
-	print(pingMeasurement)
-	print(debugMessage)
+## Called by "Steam.relay_network_status"
+#func _onRelayNetworkStatus(avaliable:int, pingMeasurement:int, _avaliableConfig:int, _avaliableRelay:int, debugMessage:String) -> void:
+	#pass
+
+
+## Called by "multiplayer.peer_connected"
+func _onPeerConnected(id:int) -> void:
+	print("Peer %s added to lobby" % id)
+	
+	lobbyListMemberAdd(id)
+
+
+## Called by "multiplayer.peer_disconnected"
+func _onPeerDisconnected(id:int) -> void:
+	print("Peer %s removed from lobby" % id)
+	
+	lobbyListMemberRemove(id)

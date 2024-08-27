@@ -7,6 +7,9 @@ var mouseReversed:bool
 
 ## Mouse input
 var motion:Vector2
+var roll:float
+
+var basisOriginal:Basis
 
 
 func _ready() -> void:
@@ -14,9 +17,11 @@ func _ready() -> void:
 	Input.set_use_accumulated_input(false)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
+	basisOriginal = transform.basis
+	
 	# Connect to GameManager signals
-	GameManager.configUpdated.connect(_configUpdated)
-	_configUpdated()
+	GameManager.configUpdated.connect(_onConfigUpdated)
+	_onConfigUpdated()
 
 
 func _input(event:InputEvent) -> void:
@@ -28,24 +33,40 @@ func _input(event:InputEvent) -> void:
 
 
 func _process(delta:float) -> void:
+	var _rollInput := Input.get_axis("roll_left", "roll_right")
+	roll = lerp(roll, _rollInput * 2.0, 4.0 * delta)
+	
 	# Limit input values
 	motion.x = wrapf(motion.x, -180.0, 180.0)
-	motion.y = clampf(motion.y, -90.0, 90.0)
+	motion.y = wrapf(motion.y, -180.0, 180.0)
+	roll = wrapf(roll, -180.0, 180.0)
 	
 	# Convert values
 	var _yaw:float = deg_to_rad(motion.x)
 	var _pitch:float = deg_to_rad(motion.y)
+	var _roll := deg_to_rad(roll)
 	
+	# Flip pitch if mouse is reversed
 	if mouseReversed:
 		_pitch *= -1.0
 	
-	# Update rotation
-	rotation.y = lerp_angle(rotation.y, _yaw, mouseSmoothing * delta) if mouseSmoothed else _yaw
-	rotation.x = lerp_angle(rotation.x, _pitch, mouseSmoothing * delta) if mouseSmoothed else _pitch
+	# Magic rotation code
+	var _basisGoal := basisOriginal * Basis(Vector3.FORWARD, _roll) * Basis(Vector3.UP, _yaw) * Basis(Vector3.RIGHT, _pitch)
+	basisOriginal = _basisGoal.orthonormalized()
+	
+	if mouseSmoothed:
+		# Smoothly align to the goal transform
+		transform.basis = transform.basis.slerp(_basisGoal, mouseSmoothing * delta).orthonormalized()
+	else:
+		# Instantly align to the goal transform
+		transform.basis = _basisGoal
+	
+	# Reset motion vector
+	motion = Vector2.ZERO
 
 
 ## Called by GameManager's "configUpdated" signal
-func _configUpdated() -> void:
+func _onConfigUpdated() -> void:
 	var _config := GameManager.config
 	mouseSensitivity = _config.get_value("mouse", "mouseSensitivity")
 	mouseSmoothing = _config.get_value("mouse", "mouseSmoothing")

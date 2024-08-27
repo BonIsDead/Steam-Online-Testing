@@ -6,7 +6,7 @@ var config:ConfigFile = ConfigFile.new()
 
 
 func _enter_tree() -> void:
-	_configUpdate()
+	_onConfigUpdate()
 
 
 func _input(event:InputEvent) -> void:
@@ -15,6 +15,11 @@ func _input(event:InputEvent) -> void:
 			get_tree().quit()
 
 
-func _configUpdate() -> void:
+@rpc("call_local")
+func gameStart() -> void:
+	get_tree().change_scene_to_file("res://scenes/TestScene.tscn")
+
+
+func _onConfigUpdate() -> void:
 	config.load("res://settings.cfg")
 	configUpdated.emit()
