@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c478cayuaeiqy" path="res://assets/Overlay.png" id="1_s6kc0"]
 [ext_resource type="Script" path="res://StatusBar.gd" id="1_vm6t3"]
-[ext_resource type="FontFile" uid="uid://b1nbjhjyx86f2" path="res://assets/Digital7.ttf" id="2_jrjqs"]
+[ext_resource type="FontFile" uid="uid://b1nbjhjyx86f2" path="res://assets/ui/Digital7.ttf" id="2_jrjqs"]
 [ext_resource type="Texture2D" uid="uid://cli1qnnesjyom" path="res://assets/MinimapMask.png" id="2_v6hlo"]
 [ext_resource type="Script" path="res://MinimapCamera.gd" id="3_66lf0"]
 [ext_resource type="Shader" path="res://StatusBar.gdshader" id="3_r6d2r"]
@@ -13,6 +13,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t5n42"]
 shader = ExtResource("3_r6d2r")
+shader_parameter/outlineDistance = 1
+shader_parameter/scanlineEnabled = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_f4ee5"]
 font = ExtResource("2_jrjqs")
@@ -72,7 +74,6 @@ offset_bottom = 80.0
 [node name="SubViewport" type="SubViewport" parent="Minimap/SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-debug_draw = 4
 size = Vector2i(80, 80)
 render_target_update_mode = 4
 
@@ -179,3 +180,10 @@ offset_top = 224.0
 offset_right = 48.0
 offset_bottom = 256.0
 stretch_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 224.0
+offset_right = 64.0
+offset_bottom = 256.0

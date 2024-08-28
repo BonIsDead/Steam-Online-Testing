@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://c77s4771lbjbo"]
+[gd_scene load_steps=16 format=3 uid="uid://c77s4771lbjbo"]
 
 [ext_resource type="Script" path="res://scripts/helpers/FirstPersonCamera.gd" id="1_hilbw"]
 [ext_resource type="Script" path="res://objects/Player.gd" id="1_onl4m"]
 [ext_resource type="Texture2D" uid="uid://c8gkm7n7hupks" path="res://assets/FlashlightCookie.png" id="3_5h0xa"]
 [ext_resource type="Script" path="res://scripts/helpers/RotationCopySmooth.gd" id="3_pifkh"]
 [ext_resource type="PackedScene" uid="uid://ctnoan3ipk0gt" path="res://StatusBar.tscn" id="5_5hyoc"]
+[ext_resource type="Texture2D" uid="uid://ci4dyoyx36kbn" path="res://assets/MinimapPlayer.png" id="6_bo3qr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cpjvs"]
 properties/0/path = NodePath(".:position")
@@ -27,14 +28,38 @@ rings = 16
 [sub_resource type="BoxMesh" id="BoxMesh_ww3eb"]
 size = Vector3(0.5, 0.2, 0.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ho7pq"]
-shading_mode = 0
-albedo_color = Color(1, 0.564706, 0, 1)
+[sub_resource type="AtlasTexture" id="AtlasTexture_fn8e3"]
+atlas = ExtResource("6_bo3qr")
+region = Rect2(0, 0, 8, 8)
 
-[sub_resource type="SphereMesh" id="SphereMesh_rq77w"]
-material = SubResource("StandardMaterial3D_ho7pq")
-radial_segments = 8
-rings = 4
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5dda"]
+atlas = ExtResource("6_bo3qr")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lcecg"]
+atlas = ExtResource("6_bo3qr")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_h1him"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fn8e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5dda")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lcecg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_l76m0"]
+mix_rate = 22050.0
+buffer_length = 0.1
 
 [node name="Player" type="CharacterBody3D"]
 motion_mode = 1
@@ -54,6 +79,7 @@ script = ExtResource("1_hilbw")
 
 [node name="TemporaryMesh" type="MeshInstance3D" parent="FirstPersonCamera"]
 unique_name_in_owner = true
+visible = false
 mesh = SubResource("SphereMesh_1q4ta")
 skeleton = NodePath("../..")
 
@@ -73,6 +99,17 @@ spot_range = 16.0
 
 [node name="StatusBar" parent="." instance=ExtResource("5_5hyoc")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MinimapIcon" type="AnimatedSprite3D" parent="."]
 layers = 2
-mesh = SubResource("SphereMesh_rq77w")
+pixel_size = 0.025
+billboard = 1
+fixed_size = true
+alpha_cut = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_h1him")
+autoplay = "default"
+frame_progress = 0.515667
+
+[node name="VoiceAudioPlayer" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamGenerator_l76m0")
+bus = &"VoiceChat"

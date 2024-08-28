@@ -5,11 +5,19 @@ signal playerListChanged
 ## Emitted to help debug
 signal log(who:String, what:String)
 
+enum VoiceDataType {
+	LOCAL,
+	NETWORK,
+}
+
 ## Game app ID
 const STEAM_APP_ID:int = 480
 ## The maximum amount of members per-lobby
 const LOBBY_MEMBERS_MAX:int = 4
+## Default sample rate used for voice chat
+const VOICE_SAMPLE_RATE:int = 22050
 
+var steamIsOnline:bool
 ## The Steam ID for the current player
 var steamId:int
 ## The Steam name for the current player
@@ -21,6 +29,19 @@ var lobbyId:int
 var lobbyMembersInfo:Dictionary
 ## The type of lobby to be created
 var lobbyType:Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
+
+## If voice chat is enabled
+var voiceEnabled:bool = true
+## If the local voice is muted
+var voiceMuted:bool
+## If the local voice can be heard locally
+var voiceLoopbackEnabled:bool = true
+
+# Temporary variables for testing voice chat
+var voiceLocalPlayback:AudioStreamGeneratorPlayback
+var voiceLocalBuffer:PackedByteArray
+var voiceNetworkPlayback:AudioStreamGeneratorPlayback
+var voiceNetworkBuffer:PackedByteArray
 
 ## The current multiplayer peer
 var peer:SteamMultiplayerPeer
@@ -34,20 +55,26 @@ var playerList:Dictionary:
 
 func _init() -> void:
 	# Initializing Steam
-	var _response := Steam.steamInitEx(false, STEAM_APP_ID)
-	print(_response)
+	var _response := Steam.steamInitEx(true, STEAM_APP_ID)
 	
 	# Check initialization status
 	match _response.status:
 		Steam.STEAM_API_INIT_RESULT_OK:
-			print("Steam initialized successfully.")
+			log.emit("Steam initialized successfully")
 			
 			# Set local information
+			steamIsOnline = Steam.loggedOn()
 			steamId = Steam.getSteamID()
 			steamName = Steam.getPersonaName()
 		
-		Steam.STEAM_API_INIT_RESULT_FAILED_GENERIC, Steam.STEAM_API_INIT_RESULT_NO_STEAM_CLIENT, Steam.STEAM_API_INIT_RESULT_VERSION_MISMATCH:
+		Steam.STEAM_API_INIT_RESULT_FAILED_GENERIC:
 			push_error("Failed to initialize Steam: %s" % _response)
+		
+		Steam.STEAM_API_INIT_RESULT_NO_STEAM_CLIENT:
+			push_error("Failed to initialize Steam: %s" % _response)
+		
+		Steam.STEAM_API_INIT_RESULT_VERSION_MISMATCH:
+			push_error("Steam version mismatch: %s" % _response)
 
 
 func _ready() -> void:
@@ -60,8 +87,8 @@ func _ready() -> void:
 
 
 func _process(delta:float) -> void:
-	# Update Steam
 	Steam.run_callbacks()
+	voiceProcess()
 
 
 #region Socket Functions
@@ -158,6 +185,81 @@ func playerRegister(playerName:String) -> void:
 ## Unregisters a player from the player list
 func playerUnregister(id:int) -> void:
 	playerList.erase(id)
+#endregion
+
+
+#region Voice Functions
+## Handles processing available Steam voices
+func voiceProcess() -> void:
+	# Check if voice chat is enabled
+	if not voiceEnabled:
+		return
+	
+	# Get available voices
+	var _available := Steam.getAvailableVoice()
+	
+	# If voice buffers were found
+	if (_available.result == Steam.VOICE_RESULT_OK) and (_available.buffer > 0):
+		# Get Steam voice data
+		var _voiceData := Steam.getVoice()
+		
+		# Check the result and see if there is anything
+		if (_voiceData.result == Steam.VOICE_RESULT_OK):
+			# Process local voice
+			if voiceLoopbackEnabled:
+				voiceBufferRead(_voiceData.buffer, VoiceDataType.LOCAL)
+			
+			# Process network voice
+			# TODO!
+	return
+
+
+## Reads and converts voice buffers
+func voiceBufferRead(buffer:PackedByteArray, dataType:VoiceDataType) -> void:
+	# Skip if there's no local voice playback
+	if (voiceLocalPlayback == null):
+		return
+	
+	# Get the decompressed voices
+	var _voiceDecompressed := Steam.decompressVoice(buffer, VOICE_SAMPLE_RATE)
+	
+	# Check if conditions are met to continue
+	if (_voiceDecompressed.result != Steam.VOICE_RESULT_OK) \
+	or (_voiceDecompressed.size() <= 0):
+		return
+	
+	match dataType:
+		VoiceDataType.LOCAL:
+			# Adjust the local voice buffer
+			voiceLocalBuffer = _voiceDecompressed.uncompressed
+			voiceLocalBuffer.resize(_voiceDecompressed.size() )
+			
+			var _bufferRange:int = mini(voiceLocalPlayback.get_frames_available() * 2, voiceLocalBuffer.size() )
+			for i:int in range(0, _bufferRange, 2):
+				# Convert Steam's 16-bit PCM buffer into amplitude
+				var _valueRaw:int = voiceLocalBuffer[0] | (voiceLocalBuffer[1] << 8)
+				_valueRaw = (_valueRaw + 32768) & 0xffff
+				var _amplitude:float = float(_valueRaw - 32768) / 32768.0
+				
+				# Update the local voice playback
+				voiceLocalPlayback.push_frame(Vector2(_amplitude, _amplitude) )
+				voiceLocalBuffer.clear()
+		
+		VoiceDataType.NETWORK:
+			# TODO! Networking stuff goes here
+			pass
+
+
+## Enables and disables Steam voice recording
+func voiceRecord(speaking:bool) -> void:
+	# Lets Steam duck UI audio when the user is speaking
+	Steam.setInGameVoiceSpeaking(steamId, speaking)
+	
+	# Starts or stops voice recording
+	if speaking:
+		Steam.startVoiceRecording()
+	else:
+		Steam.stopVoiceRecording()
 #endregion
 
 

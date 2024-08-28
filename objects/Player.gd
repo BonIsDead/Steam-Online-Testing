@@ -17,6 +17,8 @@ var speed:float = SPEED_WALK
 ## Input vector for movement
 var movement:Vector2
 
+@onready var voiceAudioPlayer:AudioStreamPlayer3D = $VoiceAudioPlayer
+
 
 func _ready() -> void:
 	if name.is_valid_int():
@@ -31,6 +33,11 @@ func _ready() -> void:
 	# Update the player manager and hide the player mesh
 	PlayerManager.playerLocal = self
 	%TemporaryMesh.hide()
+	
+	if SteamNetwork.voiceEnabled and SteamNetwork.voiceLoopbackEnabled:
+		voiceAudioPlayer.get_stream().set_mix_rate(SteamNetwork.VOICE_SAMPLE_RATE)
+		voiceAudioPlayer.play()
+		SteamNetwork.voiceLocalPlayback = voiceAudioPlayer.get_stream_playback()
 
 
 func _process(delta:float) -> void:

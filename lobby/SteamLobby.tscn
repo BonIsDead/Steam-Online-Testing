@@ -1,11 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://d0xxh2hund65j"]
+[gd_scene load_steps=8 format=3 uid="uid://d0xxh2hund65j"]
 
-[ext_resource type="Theme" uid="uid://dkp76sdv24wsq" path="res://assets/Default.theme" id="1_wopg7"]
+[ext_resource type="Theme" uid="uid://dkp76sdv24wsq" path="res://assets/ui/Default.theme" id="1_wopg7"]
 [ext_resource type="Script" path="res://lobby/Lobbies.gd" id="2_njoi0"]
 [ext_resource type="Script" path="res://lobby/MainMenu.gd" id="2_r6dyu"]
+[ext_resource type="FontFile" uid="uid://2x1bjh7h6ga2" path="res://assets/ui/TomAndJerry.ttf" id="3_motko"]
 [ext_resource type="Script" path="res://lobby/Lobby.gd" id="4_m63tu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ow26k"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_btumt"]
+font = ExtResource("3_motko")
 
 [node name="SteamLobby" type="MarginContainer"]
 anchors_preset = 15
@@ -45,12 +49,20 @@ metadata/_tab_index = 0
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Gleeby Deeby"
+label_settings = SubResource("LabelSettings_btumt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MainMenuNote" type="Label" parent="VBoxContainer/MenuTabs/MainMenu"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Footer" type="HBoxContainer" parent="VBoxContainer/MenuTabs/MainMenu"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 alignment = 1
 
 [node name="MainLobbyHost" type="Button" parent="VBoxContainer/MenuTabs/MainMenu/Footer"]

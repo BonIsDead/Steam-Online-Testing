@@ -35,6 +35,7 @@ window/stretch/mode="canvas_items"
 
 [editor]
 
+movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="C:/Users/xbono/Videos/Godot Projects/GleebyDeeby.avi"
 
 [input]

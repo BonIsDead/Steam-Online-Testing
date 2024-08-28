@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b1nbjhjyx86f2"
-path="res://.godot/imported/Digital7.ttf-4039e5f578fdd20af0873465bd7fc61b.fontdata"
+uid="uid://drrb838p6jhdt"
+path="res://.godot/imported/ENoodleScript.ttf-6076253bbae5b19b543c227d01aca8cc.fontdata"
 
 [deps]
 
-source_file="res://assets/Digital7.ttf"
-dest_files=["res://.godot/imported/Digital7.ttf-4039e5f578fdd20af0873465bd7fc61b.fontdata"]
+source_file="res://assets/ui/ENoodleScript.ttf"
+dest_files=["res://.godot/imported/ENoodleScript.ttf-6076253bbae5b19b543c227d01aca8cc.fontdata"]
 
 [params]
 

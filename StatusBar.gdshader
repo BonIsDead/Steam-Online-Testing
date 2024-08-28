@@ -1,32 +1,38 @@
 shader_type canvas_item;
 
-void vertex() {
-	// Called for every vertex the material is visible on.
-}
+// Distance the outline is from each pixel
+uniform int outlineDistance = 1;
+// Enables a scanline flicker effect
+uniform bool scanlineEnabled = false;
+
 
 void fragment() {
-	//ivec2 _textureSize = textureSize(TEXTURE, 0);
+	// Get the texel size
 	vec2 _texel = TEXTURE_PIXEL_SIZE;
-	//
-	//int _position = int(UV.y * float(_textureSize.y) );
-	//int _frame = int(TIME * 24.0) % 2;
-	//
-	//if ( (_position % 2) == _frame) {
-		//discard;
-	//}
 	
-	// Get the size of the pixels on screen, and create a variable for out outline
-	vec2 size = _texel;
+	if (scanlineEnabled) {
+		// Makes only one row of pixels appear at a time
+		ivec2 _textureSize = textureSize(TEXTURE, 0);
+		int _position = int(UV.y * float(_textureSize.y) );
+		int _frame = int(TIME * 24.0) % 2;
+		
+		// Discard every other row
+		if ( (_position % 2) == _frame) {
+			discard;
+		}
+	}
 	
-	float outline = texture(TEXTURE, UV - vec2(size.x, 0) ).a;
-	outline += texture(TEXTURE, UV).a;
-	outline += texture(TEXTURE, UV + vec2(size.x, 0) ).a;
-	outline = min(outline, 1.0);
+	// Create an outline for each pixel
+	float _outline = texture(TEXTURE, UV - vec2( (_texel.x * float(outlineDistance) ), 0) ).a;
+	_outline += texture(TEXTURE, UV).a;
+	_outline += texture(TEXTURE, UV + vec2( (_texel.x * float(outlineDistance) ), 0) ).a;
+	_outline = min(_outline, 1.0);
 	
-	// Get the texture from the screen
-	vec4 tex = texture(TEXTURE, UV);
-	vec4 modulate = COLOR - vec4(1, 1, 1, 0);
-	tex = mix(tex, vec4(0.0, 0.0, 0.0, 1.0) + modulate, outline - tex.a);
+	// Mix the outline with the original texture
+	vec4 _texture = texture(TEXTURE, UV);
+	vec4 _modulate = COLOR - vec4(1, 1, 1, 0);
+	_texture = mix(_texture, vec4(0.0, 0.0, 0.0, 1.0) + _modulate, _outline - _texture.a);
 	
-	COLOR = tex;
+	// Set final output color
+	COLOR = _texture;
 }
