@@ -34,10 +34,11 @@ func _ready() -> void:
 	PlayerManager.playerLocal = self
 	%TemporaryMesh.hide()
 	
-	if SteamNetwork.voiceEnabled and SteamNetwork.voiceLoopbackEnabled:
-		voiceAudioPlayer.get_stream().set_mix_rate(SteamNetwork.VOICE_SAMPLE_RATE)
-		voiceAudioPlayer.play()
-		SteamNetwork.voiceLocalPlayback = voiceAudioPlayer.get_stream_playback()
+	# Assign the local voice playback to the audio players stream
+	#if SteamNetwork.voiceEnabled and SteamNetwork.voiceLoopbackEnabled:
+		#voiceAudioPlayer.get_stream().set_mix_rate(SteamNetwork.VOICE_SAMPLE_RATE)
+		#voiceAudioPlayer.play()
+		#SteamNetwork.voiceLocalPlayback = voiceAudioPlayer.get_stream_playback()
 
 
 func _process(delta:float) -> void:

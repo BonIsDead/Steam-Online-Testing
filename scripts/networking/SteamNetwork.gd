@@ -43,6 +43,8 @@ var voiceLocalBuffer:PackedByteArray
 var voiceNetworkPlayback:AudioStreamGeneratorPlayback
 var voiceNetworkBuffer:PackedByteArray
 
+var voice:AudioStreamPlayer
+
 ## The current multiplayer peer
 var peer:SteamMultiplayerPeer
 
@@ -84,6 +86,11 @@ func _ready() -> void:
 	Steam.lobby_created.connect(_onLobbyCreated)
 	Steam.lobby_joined.connect(_onLobbyJoined)
 	log.connect(_onLog)
+	
+	#voiceRecord(voiceEnabled)
+	
+	if not steamIsOnline:
+		set_process(false)
 
 
 func _process(delta:float) -> void:
@@ -237,13 +244,11 @@ func voiceBufferRead(buffer:PackedByteArray, dataType:VoiceDataType) -> void:
 			var _bufferRange:int = mini(voiceLocalPlayback.get_frames_available() * 2, voiceLocalBuffer.size() )
 			for i:int in range(0, _bufferRange, 2):
 				# Convert Steam's 16-bit PCM buffer into amplitude
-				var _valueRaw:int = voiceLocalBuffer[0] | (voiceLocalBuffer[1] << 8)
-				_valueRaw = (_valueRaw + 32768) & 0xffff
-				var _amplitude:float = float(_valueRaw - 32768) / 32768.0
+				var _raw := voiceLocalBuffer.decode_s16(i)
+				var _amplitude:float = float(_raw - 32768) / 32768.0
 				
 				# Update the local voice playback
 				voiceLocalPlayback.push_frame(Vector2(_amplitude, _amplitude) )
-				voiceLocalBuffer.clear()
 		
 		VoiceDataType.NETWORK:
 			# TODO! Networking stuff goes here

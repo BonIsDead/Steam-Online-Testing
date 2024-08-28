@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://objects/Player.gd" id="1_onl4m"]
 [ext_resource type="Texture2D" uid="uid://c8gkm7n7hupks" path="res://assets/FlashlightCookie.png" id="3_5h0xa"]
 [ext_resource type="Script" path="res://scripts/helpers/RotationCopySmooth.gd" id="3_pifkh"]
-[ext_resource type="PackedScene" uid="uid://ctnoan3ipk0gt" path="res://StatusBar.tscn" id="5_5hyoc"]
+[ext_resource type="PackedScene" uid="uid://ctnoan3ipk0gt" path="res://scenes/StatusBar.tscn" id="5_5hyoc"]
 [ext_resource type="Texture2D" uid="uid://ci4dyoyx36kbn" path="res://assets/MinimapPlayer.png" id="6_bo3qr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cpjvs"]

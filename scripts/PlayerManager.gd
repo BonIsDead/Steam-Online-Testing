@@ -60,14 +60,6 @@ var damageStatus:Dictionary = {
 }
 
 
-func _ready() -> void:
-	SteamNetwork.voiceRecord(SteamNetwork.voiceEnabled)
-	
-	# Add an item to the item bar
-	#var _item:Item = load("res://assets/Flashlight.tres")
-	#items.append(_item)
-
-
 func _process(delta:float) -> void:
 	# Temporary inputs
 	if Input.is_action_just_pressed("item_next"):
